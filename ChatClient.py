@@ -1,7 +1,7 @@
 import socket
 
 
-def client_program():
+def client_main():
     port = 8080
     s = socket.socket()
     s.connect(("localhost", port))
@@ -13,4 +13,4 @@ def client_program():
         message = input("Enter Message to be sent to the server-> ")
     s.close()
 if __name__ == '__main__':
-    client_program()
+    client_main()
