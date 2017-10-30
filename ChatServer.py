@@ -1,6 +1,16 @@
 import socket
-import queue
+from Queue import Queue
 from threading import Thread
+from threading import Lock
+import re as regex
+
+
+# All client stored in the queue
+clients = Queue()
+
+roomsArray = {}
+
+valid_join_msg = r"JOIN_CHATROOM: ?(.*)\\nC"
 
 
 # Client thread to handle multiple client requests
@@ -10,7 +20,6 @@ class ClientThread(Thread):
         print("Client Thread Initialized")
         Thread.__init__(self)
         self.clients = clients
-        self.daemon = True  # Thread dies after main exists
         self.start()
 
     # function run when thread is started
@@ -39,11 +48,20 @@ class ClientThread(Thread):
 
                 if message.startswith("HELO"):
                     conn.sendall(("HELO " + message.split("HELO ", 1)[1] + "\nIP:" + str(addr[0]) + "\nPort:" + str(addr[
-                        1]) + "\nStudentID:" + "kkjkjkj" + "\n").encode())
+                        1]) + "\nStudentID:" + "17310876" + "\n").encode())
+
+                if message.startswith("JOIN_CHATROOM"):
+                    createChatRoom(conn, message)
 
 
-# All client stored in the queue
-clients = queue.Queue()
+def createChatRoom(conn, message):
+    print message
+    msg_components = regex.match(valid_join_msg, message, regex.M)
+    print msg_components
+    if msg_components is not None:
+        conn.sendall(("Chat room Created").encode())
+    else:
+        conn.sendall(("ERROR_CODE: 5\nERROR_DESCRIPTION: Invalid Chatroom join message... Please write the format").encode())
 
 
 # Main Method: First method to be called
