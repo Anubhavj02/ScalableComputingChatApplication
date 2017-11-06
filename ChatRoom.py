@@ -66,8 +66,7 @@ class Chatroom:
         print user_conns
         # Loop through all the user connections and send them the message
         for dest_user, dest_conn in user_conns:
-            self.send_msg_to_client(
-                "CHAT:" + str(self.chat_room_id) + "\nCLIENT_NAME:" + source_user + "\nMESSAGE:" + msg + "\n",
+            self.send_msg_to_client("CHAT:" + str(self.chat_room_id) + "\nCLIENT_NAME:" + str(source_user) + "\nMESSAGE:" + msg + "\n",
                 dest_conn)
 
     def remove_user_from_chat_room(self, chat_user_id, chat_user_name, conn):
@@ -94,6 +93,32 @@ class Chatroom:
         finally:
             self.chat_room_lock.release()
 
+    def disconnect_user_from_chat_room(self, chat_user_id, chat_user_name, conn):
+        """this function disconnects the user from the chat room
+
+            Args:
+                chat_user_id: id associated to a particular user
+                chat_user_name: name associated with each user
+                conn: the connection parameter acting as a link b/w client and server
+
+        """
+
+        # Lock the flow to enable sync between threads
+        self.chat_room_lock.acquire()
+        try:
+            # checking if user belongs to chat room if not give error and return
+            if chat_user_id not in self.chat_room_users:
+                return
+        finally:
+            self.chat_room_lock.release()
+        # broadcast message to all chat room users
+        self.send_chat_msg(chat_user_name, chat_user_name + " has left this chatroom.")
+        self.chat_room_lock.acquire()
+        try:
+            del self.chat_room_users[chat_user_id] # delete the user from the array
+        finally:
+            self.chat_room_lock.release()
+
     def send_error_msg_to_client(self, err_desc, err_code, conn):
         """function to create Error string in proper format with error code and description and then send to the client
 
@@ -108,7 +133,7 @@ class Chatroom:
         message = "ERROR_CODE: " + str(err_code) + "\nERROR_DESCRIPTION: " + err_desc
         self.send_msg_to_client(message, conn)
 
-    def send_msg_to_client(message, conn):
+    def send_msg_to_client(self, message, conn):
         """function to send processed message to the client
 
         Args:
@@ -120,4 +145,3 @@ class Chatroom:
         print "SENDING MESSAGE TO CLIENT->\n", message
         if conn:
             conn.sendall((message + "\n").encode())
-
