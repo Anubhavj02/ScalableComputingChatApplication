@@ -11,19 +11,19 @@ This chat server can support multiple clients where clients can join chat rooms,
 
 ### Starting the server
 First clone the repository and then in command line/ terminal type....
-> sh start.sh {port_number}
+  > sh start.sh {port_number}
 
 where port number is port where you want to start the server
 
 ### Demo Testing of the Server from a test client
 ChatClient.py is a demo client file that tests the common commands of the server
-> python ChatClient.py {port_number}
+  > python ChatClient.py {port_number}
 
 ### Commands and Response from the server
 * #### Hello message to the server
 Request
-> "HELO text\n"
+  > "HELO text\n"
 
 Response
-> "HELO text\nIP:[ip address]\nPort:[port number]\nStudentID:[your student ID]\n"
+  > "HELO text\nIP:[ip address]\nPort:[port number]\nStudentID:[your student ID]\n"
 
