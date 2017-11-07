@@ -11,7 +11,7 @@ This chat server can support multiple clients where clients can join chat rooms,
 
 ### Starting the server
 First clone the repository and then in command line/ terminal type....
-  '''
+  '''python
   sh start.sh {port_number}
   '''
 
