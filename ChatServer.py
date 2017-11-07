@@ -463,7 +463,10 @@ def server_main():
     port = int(sys.argv[1])  # Port for connection
     # Ipv4 Socket Family and TCP Socket
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    host = socket.gethostbyname(socket.gethostname())
+    try:
+        host = socket.gethostbyname(socket.gethostname())
+    except Exception:
+        host = "localhost"
     s.bind((host, port))  # Bind with port and host
     s.listen(5)
 
