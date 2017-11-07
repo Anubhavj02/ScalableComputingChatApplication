@@ -23,13 +23,44 @@ python ChatClient.py {port_number}
 ```
 
 ### Commands and Response from the server
-* #### Hello message to the server
-Request
-```
-"HELO text\n"
-```
-Response
-```
-"HELO text\nIP:[ip address]\nPort:[port number]\nStudentID:[your student ID]\n"
-```
+* #### HELLO message to the server
+  Request
+  ```
+  "HELO text\n"
+  ```
+  Response
+  ```
+  "HELO text\nIP:[ip address]\nPort:[port number]\nStudentID:[your student ID]\n"
+  ```
+  
+* #### JOIN message to the server
+  Request
+  ```
+  JOIN_CHATROOM: [chatroom name]
+	CLIENT_IP: [IP Address of client if UDP | 0 if TCP]
+	PORT: [port number of client if UDP | 0 if TCP]
+	CLIENT_NAME: [string Handle to identifier client user]
+  ```
+  Response
+  ```
+  JOINED_CHATROOM: [chatroom name]
+	SERVER_IP: [IP address of chat room]
+	PORT: [port number of chat room]
+	ROOM_REF: [integer that uniquely identifies chat room on server]
+  JOIN_ID: [integer that uniquely identifies client joining]
+  ```
+  
+* #### LEAVE message to the server
+  Request
+  ```
+  LEAVE_CHATROOM: [ROOM_REF]
+	JOIN_ID: [integer previously provided by server on join]
+	CLIENT_NAME: [string Handle to identifier client user]
+  ```
+  Response
+  ```
+  LEFT_CHATROOM: [ROOM_REF]
+	JOIN_ID: [integer previously provided by server on join]
+  ```
+  
 
